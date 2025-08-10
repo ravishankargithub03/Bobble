@@ -41,7 +41,7 @@ public class ContactController extends BaseController{
 
 	private ContactService contactService;
 	
-//	=================================================================
+//	========================= Add Contact =========================
 	
 	@Operation(summary = "Add Contact", 
 	           description = "This service is used for adding contact.")
@@ -74,7 +74,7 @@ public class ContactController extends BaseController{
 		return getOKResponseEntity(response);
 	}
 	
-//	=========================================================
+//	========================= Get All Contact =========================
 	
 	@Operation(summary = "Get All Contact", 
 	           description = "This service is used for fetching all contact based on their status and user.")
@@ -101,7 +101,7 @@ public class ContactController extends BaseController{
 		return getOKResponseEntity(response);
 	}
 	
-//	=========================================================
+//	========================== Get All Contact Request ============================
 	
 	@Operation(summary = "Get All Contact Request", 
 	           description = "This service is used for fetching all contact request based on their status and user.")
@@ -128,7 +128,7 @@ public class ContactController extends BaseController{
 		return getOKResponseEntity(response);
 	}
 	
-//	=============================================================
+//	========================== Update Contact Status ===================================
 	
 	@Operation(summary = "Update Contact Status", 
 	           description = "This service is used for updating contact status.")
