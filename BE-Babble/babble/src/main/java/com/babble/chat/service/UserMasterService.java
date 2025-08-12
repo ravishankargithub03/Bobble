@@ -1,33 +1,13 @@
 package com.babble.chat.service;
 
-import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Service;
-
-import com.babble.chat.common.Constants.RecordStatus;
 import com.babble.chat.exception.ChatExceptionService;
 import com.babble.chat.model.UserMaster;
-import com.babble.chat.repository.UserMasterRepository;
 import com.babble.chat.request.UserMasterRequest;
 
-import lombok.AllArgsConstructor;
+import jakarta.validation.Valid;
 
-@Service
-@AllArgsConstructor
-public class UserMasterService {
-	
-	private UserMasterRepository userMasterRepository;
-	
-//	================================================
+public interface UserMasterService {
 
-	public UserMaster saveUser(UserMasterRequest userRequest) throws ChatExceptionService {
-		UserMaster savedUser = null;
-		
-		UserMaster user = new UserMaster();
-		BeanUtils.copyProperties(userRequest, user);
-		user.setStatus(RecordStatus.ACTIVE);
-		savedUser = userMasterRepository.save(user);
-		return savedUser;
-	}
+	UserMaster saveUser(@Valid UserMasterRequest userRequest) throws ChatExceptionService;
 
-	
 }

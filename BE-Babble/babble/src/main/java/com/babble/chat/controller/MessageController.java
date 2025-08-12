@@ -20,6 +20,7 @@ import com.babble.chat.request.MessageMasterRequest;
 import com.babble.chat.response.GroupResponse;
 import com.babble.chat.response.Response;
 import com.babble.chat.service.MessageMasterService;
+import com.babble.chat.service.impl.MessageMasterServiceImpl;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

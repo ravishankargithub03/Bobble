@@ -22,6 +22,7 @@ import com.babble.chat.request.ContactMasterRequest;
 import com.babble.chat.response.ContactResponse;
 import com.babble.chat.response.Response;
 import com.babble.chat.service.ContactService;
+import com.babble.chat.service.impl.ContactServiceImpl;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
