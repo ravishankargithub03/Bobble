@@ -1,0 +1,139 @@
+package com.babble.chat.service.impl;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import org.springframework.stereotype.Service;
+
+import com.babble.chat.common.Constants;
+import com.babble.chat.common.Constants.RecordStatus;
+import com.babble.chat.model.ContactMaster;
+import com.babble.chat.model.UserMaster;
+import com.babble.chat.repository.ContactMasterRepository;
+import com.babble.chat.repository.UserMasterRepository;
+import com.babble.chat.request.ContactMasterRequest;
+import com.babble.chat.response.ContactResponse;
+
+import lombok.AllArgsConstructor;
+
+@Service
+@AllArgsConstructor
+public class ContactService {
+
+	private ContactMasterRepository contactMasterRepository;
+	
+	private UserMasterRepository userMasterRepository;
+	
+//	============================================
+	
+	public ContactMaster saveContact(ContactMasterRequest request) {
+		
+		ContactMaster contactMaster = null;
+		
+		UserMaster member = userMasterRepository.getByPhoneNumberAndStatus(request.getMemberNumber(), Constants.RecordStatus.ACTIVE);
+		
+		if (member != null) {
+			ContactMaster entity = new ContactMaster();
+
+			UserMaster me = new UserMaster();
+			me.setId(request.getMyId());
+			entity.setMe(me);
+			entity.setMember(member);
+			entity.setStatus(RecordStatus.PENDING);
+			contactMaster = contactMasterRepository.save(entity);
+		}
+		
+		return contactMaster;
+	}
+
+//	====================================================
+	
+	public Set<ContactResponse> getAllContactRequest(Long myNumber) {
+		Set<ContactResponse> responses = null;
+		Set<ContactMaster> contactMaster = null;
+		
+		UserMaster me = new UserMaster();
+		me.setId(myNumber);
+		contactMaster = contactMasterRepository.findByMemberAndStatus(me, Constants.RecordStatus.PENDING);
+		
+		if (contactMaster != null && !contactMaster.isEmpty()) {
+			responses = new HashSet<>();
+			for(ContactMaster entity : contactMaster) {
+				ContactResponse response = new ContactResponse();
+                response.setId(entity.getId());
+                response.setMemberId(entity.getMe().getId());
+                response.setMemberName(entity.getMe().getFirstName()+" "+entity.getMe().getLastName());
+                response.setMemberEmail(entity.getMe().getEmail());
+                response.setMemberNumber(entity.getMe().getPhoneNumber());
+                responses.add(response);
+			}
+		}
+		
+		return responses;
+	}
+	
+//	=========================================================
+
+	public String updateRequestStatus(Long contactId, Integer status) {
+		String message = null;
+		ContactMaster updatedContactMaster = null;
+		ContactMaster contactMaster = null;
+		
+		contactMaster = contactMasterRepository.findById(contactId).orElse(null);
+		
+		if (contactMaster != null) {
+			contactMaster.setStatus(status);
+			updatedContactMaster = contactMasterRepository.save(contactMaster);
+		}
+		
+		if (updatedContactMaster != null) {
+			message = "Request status updated successfully";
+		}
+		
+		return message;
+	}
+
+//	==========================================================
+	
+	public Set<ContactResponse> getAllContact(Long myNumber) {
+		Set<ContactResponse> responses = null;
+		Set<ContactMaster> contactMasterMe = null;
+		Set<ContactMaster> contactMasterMember = null;
+		
+		UserMaster me = new UserMaster();
+		me.setId(myNumber);
+		contactMasterMe = contactMasterRepository.findByMeAndStatus(me, Constants.RecordStatus.ACTIVE);
+		contactMasterMember = contactMasterRepository.findByMemberAndStatus(me, Constants.RecordStatus.ACTIVE);
+		
+		if (contactMasterMe != null && !contactMasterMe.isEmpty()) {
+			responses = new HashSet<>();
+			for(ContactMaster entity : contactMasterMe) {
+				ContactResponse response = new ContactResponse();
+                response.setId(entity.getId());
+                response.setMemberId(entity.getMember().getId());
+                response.setMemberName(entity.getMember().getFirstName()+" "+entity.getMember().getLastName());
+                response.setMemberEmail(entity.getMember().getEmail());
+                response.setMemberNumber(entity.getMember().getPhoneNumber());
+                response.setIsGroup(false);
+                responses.add(response);
+			}
+		}
+		
+		if (contactMasterMember != null && !contactMasterMember.isEmpty()) {
+			responses = new HashSet<>();
+			for(ContactMaster entity : contactMasterMember) {
+				ContactResponse response = new ContactResponse();
+                response.setId(entity.getId());
+                response.setMemberId(entity.getMe().getId());
+                response.setMemberName(entity.getMe().getFirstName()+" "+entity.getMe().getLastName());
+                response.setMemberEmail(entity.getMe().getEmail());
+                response.setMemberNumber(entity.getMe().getPhoneNumber());
+                response.setIsGroup(false);
+                responses.add(response);
+			}
+		}
+		
+		return responses;
+	}
+	
+}

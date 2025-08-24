@@ -1,0 +1,85 @@
+package com.babble.chat.service.impl;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
+import com.babble.chat.common.Constants;
+import com.babble.chat.model.GroupMaster;
+import com.babble.chat.model.UserMaster;
+import com.babble.chat.repository.GroupMasterRepository;
+import com.babble.chat.request.GroupMasterRequest;
+import com.babble.chat.response.GroupResponse;
+
+import lombok.AllArgsConstructor;
+
+@Service
+@AllArgsConstructor
+public class GroupService {
+
+	private GroupMasterRepository groupMasterRepository;
+	
+//	=================================================
+	
+	public GroupMaster saveGroup(GroupMasterRequest groupRequest) {
+		GroupMaster savedGroup = null;
+		GroupMaster exigestGroup = null;
+		
+		if (groupRequest.getId() != null) {
+			exigestGroup = groupMasterRepository.findById(groupRequest.getId()).orElse(null);
+		}
+		
+		if(exigestGroup!=null) {
+			exigestGroup.setId(groupRequest.getId());
+		}
+		
+		UserMaster master = new UserMaster();
+		master.setId(groupRequest.getMasterId());
+		
+		GroupMaster entity = new GroupMaster();
+		entity.setGroupCode(groupRequest.getCode());
+		entity.setGroupName(groupRequest.getName());
+		entity.setNarrative(groupRequest.getNarrative());
+		entity.setMaster(master);
+		entity.setStatus(Constants.RecordStatus.ACTIVE);
+		entity.setMember(groupRequest.getMemberIds().stream().map(memberId -> {
+			UserMaster member = new UserMaster();
+			member.setId(memberId);
+			return member;
+		}).collect(Collectors.toSet()));
+		
+		savedGroup = groupMasterRepository.save(entity);
+		
+		return savedGroup;
+	}
+
+//	======================================================
+	
+	public Set<GroupResponse> getAllGroup(Long myNumber, Integer status) {
+		Set<GroupResponse> response = null;
+		List<Map<String, Object>> groupDetailsList = null;
+		
+		groupDetailsList = groupMasterRepository.getGroupDetailsList(myNumber, status);
+		
+		if (groupDetailsList != null && !groupDetailsList.isEmpty()) {
+			response = groupDetailsList.stream().map(mapObject -> {
+				GroupResponse record = new GroupResponse();
+				record.setGroupId((Long) mapObject.get("groupId"));
+				record.setGroupCode((String) mapObject.get("groupCode"));
+				record.setGroupName((String) mapObject.get("groupName"));
+				record.setNarrative((String) mapObject.get("narrative"));
+				record.setMasterId((Long) mapObject.get("masterId"));
+				record.setMasterName((String) mapObject.get("masterFirstName") + " " + mapObject.get("masterLastName"));
+				record.setMasterNumber((Long) mapObject.get("masterPhoneNumber"));
+				record.setIsGroup(true);
+				return record;
+			}).collect(Collectors.toSet());
+		}
+		
+		return response;
+	}
+
+}

@@ -1,0 +1,112 @@
+package com.babble.chat.client;
+
+import java.net.URI;
+
+import jakarta.websocket.ClientEndpoint;
+import jakarta.websocket.CloseReason;
+import jakarta.websocket.ContainerProvider;
+import jakarta.websocket.OnClose;
+import jakarta.websocket.OnError;
+import jakarta.websocket.OnMessage;
+import jakarta.websocket.OnOpen;
+import jakarta.websocket.Session;
+import jakarta.websocket.WebSocketContainer;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+@ClientEndpoint
+public class FXChatClient extends Application {
+
+	private Session session;
+	private TextArea chatArea;
+	private TextField inputField;
+	private Button sendButton;
+
+	@Override
+    public void start(Stage primaryStage) throws Exception {
+        chatArea = new TextArea();
+        chatArea.setEditable(false);
+
+        inputField = new TextField();
+        inputField.setPromptText("Type your message...");
+
+        sendButton = new Button("Send");
+        sendButton.setOnAction(e -> sendMessage());
+
+        VBox root = new VBox(10, chatArea, inputField, sendButton);
+        Scene scene = new Scene(root, 400, 300);
+
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("JavaFX WebSocket Chat Client");
+        primaryStage.show();
+
+        connectWebSocket();
+    }
+	
+	private void connectWebSocket() {
+        try {
+            WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+            // Connect to your SockJS endpoint (note SockJS uses HTTP fallback, so normal WS might not work here directly)
+            // Your server endpoint without SockJS: ws://localhost:8080/ws-chat/websocket
+            // Here, use STOMP or just plain WebSocket URI depending on your server setup
+
+            // For simplicity, connecting to the raw websocket endpoint without SockJS:
+            URI uri = new URI("ws://localhost:3333/ws-chat/websocket");
+            container.connectToServer(this, uri);
+
+            appendMessage("Connected to chat server.");
+        } catch (Exception e) {
+            appendMessage("Failed to connect: " + e.getMessage());
+        }
+    }
+	
+	@OnOpen
+    public void onOpen(Session session) {
+        this.session = session;
+        appendMessage("Connection opened");
+    }
+
+    @OnMessage
+    public void onMessage(String message) {
+        Platform.runLater(() -> appendMessage("Received: " + message));
+    }
+
+    @OnClose
+    public void onClose(Session session, CloseReason closeReason) {
+        appendMessage("Connection closed: " + closeReason);
+    }
+
+    @OnError
+    public void onError(Session session, Throwable throwable) {
+        appendMessage("Error: " + throwable.getMessage());
+    }
+
+    private void sendMessage() {
+        String msg = inputField.getText();
+        if (msg.isEmpty() || session == null) return;
+
+        try {
+            // Construct simple JSON string to send (adjust according to your ChatMessage structure)
+            String jsonMessage = String.format("{\"messageId\":%d, \"senderId\":%d, \"receiverId\":%s, \"content\":\"%s\", \"isGroup\":%s}", msg);
+            session.getAsyncRemote().sendText(jsonMessage);
+            appendMessage("You: " + msg);
+            inputField.clear();
+        } catch (Exception e) {
+            appendMessage("Failed to send message: " + e.getMessage());
+        }
+    }
+
+    private void appendMessage(String message) {
+        chatArea.appendText(message + "\n");
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}

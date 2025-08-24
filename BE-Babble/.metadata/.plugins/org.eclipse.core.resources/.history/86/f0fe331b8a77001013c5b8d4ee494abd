@@ -1,0 +1,5 @@
+package com.babble.chat.config;
+
+public class WebSocketConfig {
+
+}

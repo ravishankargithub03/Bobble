@@ -1,0 +1,5 @@
+package com.babble.chat.service;
+
+public interface GroupService {
+
+}

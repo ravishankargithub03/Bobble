@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="com.babble.chat.service.ContactService"/>
+    <fullyQualifiedTypeName name="com.babble.chat.service.GroupService"/>
+    <fullyQualifiedTypeName name="com.babble.chat.service.MessageMasterService"/>
+    <fullyQualifiedTypeName name="com.babble.chat.service.UserMasterService"/>
+    <fullyQualifiedTypeName name="com.babble.chat.service.AESCryptoService"/>
+    <fullyQualifiedTypeName name="java.lang.Override"/>
+    <fullyQualifiedTypeName name="jakarta.websocket.ClientEndpoint"/>
+    <fullyQualifiedTypeName name="jakarta.websocket.Session"/>
+    <fullyQualifiedTypeName name="javafx.scene.control.TextArea"/>
+    <fullyQualifiedTypeName name="javafx.scene.control.TextField"/>
+    <fullyQualifiedTypeName name="javafx.scene.control.Button"/>
+    <fullyQualifiedTypeName name="javafx.stage.Stage"/>
+    <fullyQualifiedTypeName name="javafx.application.Application"/>
+    <fullyQualifiedTypeName name="javafx.scene.layout.VBox"/>
+    <fullyQualifiedTypeName name="javafx.scene.Scene"/>
+    <fullyQualifiedTypeName name="jakarta.websocket.WebSocketContainer"/>
+    <fullyQualifiedTypeName name="jakarta.websocket.ContainerProvider"/>
+    <fullyQualifiedTypeName name="java.net.URI"/>
+    <fullyQualifiedTypeName name="jakarta.websocket.OnOpen"/>
+    <fullyQualifiedTypeName name="jakarta.websocket.OnMessage"/>
+    <fullyQualifiedTypeName name="javafx.application.Platform"/>
+    <fullyQualifiedTypeName name="jakarta.websocket.OnClose"/>
+    <fullyQualifiedTypeName name="jakarta.websocket.CloseReason"/>
+    <fullyQualifiedTypeName name="jakarta.websocket.OnError"/>
+    <fullyQualifiedTypeName name="org.springframework.messaging.handler.annotation.MessageMapping"/>
+    <fullyQualifiedTypeName name="org.springframework.messaging.simp.SimpMessagingTemplate"/>
+    <fullyQualifiedTypeName name="org.springframework.context.annotation.Configuration"/>
+    <fullyQualifiedTypeName name="org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker"/>
+    <fullyQualifiedTypeName name="org.springframework.web.socket.config.annotation.StompEndpointRegistry"/>
+    <fullyQualifiedTypeName name="org.springframework.messaging.simp.config.MessageBrokerRegistry"/>
+    <fullyQualifiedTypeName name="org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer"/>
+    <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.PostMapping"/>
+</qualifiedTypeNameHistroy>
